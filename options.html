@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PII Shield · Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
+        <path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+      </svg>
+      <div>
+        <h1>PII Shield</h1>
+        <p class="sub">Local, offline PII masking for AI chat inputs</p>
+      </div>
+    </div>
+    <label class="master-switch">
+      <span>Protection</span>
+      <span class="switch">
+        <input type="checkbox" id="master-enabled">
+        <span class="slider"></span>
+      </span>
+    </label>
+  </header>
+
+  <div class="layout">
+    <nav class="tabs" role="tablist" aria-label="Settings sections">
+      <button class="tab active" role="tab" data-tab="dashboard" aria-selected="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="tab" role="tab" data-tab="categories" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        <span>What gets masked</span>
+      </button>
+      <button class="tab" role="tab" data-tab="sites" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18c-1.7 0-3.3-.5-4.6-1.4.7-.6 1.6-1 2.6-1 .5 0 .9 0 1.3.1.2 0 .5.1.7.1s.5 0 .7-.1c.4-.1.8-.1 1.3-.1 1 0 1.9.4 2.6 1A8 8 0 0112 20zM5.6 17a8 8 0 1112.8 0c-1-.7-2.2-1-3.4-1-.6 0-1 0-1.5.1-.2 0-.4.1-.6.1s-.4 0-.6-.1c-.5-.1-1-.1-1.5-.1-1.2 0-2.4.3-3.2 1zM12 5a4 4 0 100 8 4 4 0 000-8z"/></svg>
+        <span>Sites</span>
+      </button>
+      <button class="tab" role="tab" data-tab="vault" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 8h-1V6a5 5 0 00-10 0v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V10a2 2 0 00-2-2zM9 6a3 3 0 016 0v2H9V6zm9 14H6V10h12v10z"/></svg>
+        <span>Vault</span>
+      </button>
+    </nav>
+
+    <main class="panel">
+      <section class="tab-panel active" data-panel="dashboard" role="tabpanel">
+        <header class="panel-head">
+          <h2>Protection summary</h2>
+          <p class="hint">Lifetime counts of items masked across supported sites. Stats live in <code>chrome.storage.local</code>.</p>
+        </header>
+        <div class="stat-grid" id="stat-grid"></div>
+        <div class="meta">
+          <span>Browser sessions: <strong id="meta-sessions">0</strong></span>
+          <span>Vault entries: <strong id="meta-vault">0</strong></span>
+          <button id="reset-stats" class="btn ghost">Reset stats</button>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-panel="categories" role="tabpanel">
+        <header class="panel-head">
+          <h2>What gets masked</h2>
+          <p class="hint">Each item is replaced with a unique token (e.g. <code>[EMAIL_1]</code>) so the assistant's reply can be unmasked back to the original value.</p>
+        </header>
+        <div class="category-list" id="category-list"></div>
+
+        <h3 class="subhead">Custom entities</h3>
+        <div class="category-list" id="custom-list"></div>
+
+        <details class="add-card" id="custom-add">
+          <summary>
+            <span class="add-plus" aria-hidden="true">+</span>
+            <span class="add-label">Add custom entity</span>
+          </summary>
+          <form class="custom-form" id="custom-form" autocomplete="off">
+            <div class="custom-fields">
+              <label class="field">
+                <span>Name</span>
+                <input type="text" id="custom-name" placeholder="EMPLOYEE_ID" maxlength="40" required>
+              </label>
+              <label class="field flex-2">
+                <span>Pattern</span>
+                <input type="text" id="custom-pattern" placeholder="EMP-\d{6}" required>
+              </label>
+              <label class="field field-narrow">
+                <span>Flags</span>
+                <input type="text" id="custom-flags" value="gi" maxlength="6">
+              </label>
+            </div>
+            <div class="custom-actions">
+              <span class="form-error" id="custom-error" role="alert"></span>
+              <button type="submit" class="btn primary">Add</button>
+            </div>
+          </form>
+        </details>
+      </section>
+
+      <section class="tab-panel" data-panel="sites" role="tabpanel">
+        <header class="panel-head">
+          <h2>Sites</h2>
+          <p class="hint">PII Shield is pre-wired for these AI chat sites. Toggle which ones it should actively protect. To add a brand-new site, update <code>manifest.json</code> and <code>SITE_CONFIGS</code> in <code>content.js</code> with that site's input and response selectors.</p>
+        </header>
+        <div class="site-list" id="site-list"></div>
+      </section>
+
+      <section class="tab-panel" data-panel="vault" role="tabpanel">
+        <header class="panel-head">
+          <h2>Vault</h2>
+          <p class="hint">Original values are kept in <code>chrome.storage.session</code> — automatically wiped when you close the browser. Use it to unmask the assistant's reply during the same session.</p>
+        </header>
+        <div class="vault-meta" id="vault-meta">No entries yet.</div>
+        <div class="vault-actions">
+          <button id="clear-vault" class="btn danger">Clear vault</button>
+        </div>
+        <table class="vault-table" id="vault-table">
+          <thead><tr><th>Token</th><th>Original</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

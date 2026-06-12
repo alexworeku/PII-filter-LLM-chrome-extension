@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="brand">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+      <path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+    </svg>
+    <h1>PII Shield</h1>
+  </header>
+
+  <section class="status" id="status">
+    <div class="status-row">
+      <span class="status-label">Protection</span>
+      <label class="switch">
+        <input type="checkbox" id="enabled">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="status-row">
+      <span class="status-label">This site</span>
+      <span class="status-value" id="site-status">—</span>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-total">0</div>
+      <div class="stat-label">Items masked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-session">0</div>
+      <div class="stat-label">Vault entries</div>
+    </div>
+  </section>
+
+  <footer class="actions">
+    <button id="open-settings" class="btn primary">Settings</button>
+    <button id="clear-vault" class="btn">Clear vault</button>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
